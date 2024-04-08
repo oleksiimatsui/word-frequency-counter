@@ -22,7 +22,7 @@ int count_word_occurrences(const std::vector<std::string> &words, const std::str
     return count;
 }
 
-std::string get_local_text(int rank, int ranks_count, int text_length, int word_length, const std::string &text)
+void get_local_text(std::string &res, int rank, int ranks_count, int text_length, int word_length, const std::string &text)
 {
     int start = rank * (text_length / ranks_count);
     int end;
@@ -37,23 +37,22 @@ std::string get_local_text(int rank, int ranks_count, int text_length, int word_
     int size = end - start;
     char *text_buffer = new char[size];
     strncpy(text_buffer, text.c_str() + start, size);
-    std::string local_text = std::string(text_buffer);
+    res = std::string(text_buffer);
     if (rank != ranks_count - 1)
     {
-        int split_pos = local_text.find_last_of(" ");
+        int split_pos = res.find_last_of(" ");
         if (split_pos != std::string::npos)
         {
             end = split_pos;
-            local_text = std::string(text_buffer, text_buffer + end);
+            res = std::string(text_buffer, text_buffer + end);
         }
     }
-    return local_text;
 }
 
 int main()
 {
     double startTime = omp_get_wtime();
-    int size = 4;
+    int size = 8;
     omp_set_num_threads(size);
     std::string target_word = "the";
     std::string text;
@@ -69,7 +68,8 @@ int main()
 #pragma omp parallel
     {
         int rank = omp_get_thread_num();
-        std::string local_text = get_local_text(rank, size, text_length, word_length, text);
+        std::string local_text;
+        get_local_text(local_text, rank, size, text_length, word_length, text);
 
         std::istringstream iss(local_text);
         std::vector<std::string> words;
