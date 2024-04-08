@@ -1,12 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
-project(MPI_Most_Common_Word)
+cmake_minimum_required(VERSION 3.1)
+project(WordCountOpenMP)
 
-find_package(MPI REQUIRED)
+find_package(OpenMP REQUIRED)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(${MPI_INCLUDE_PATH})
+add_executable(word_count_openmp word_count_openmp.cpp)
 
-add_executable(MPI_Most_Common_Word main.cpp)
-target_link_libraries(MPI_Most_Common_Word ${MPI_CXX_LIBRARIES})
- 
+target_link_libraries(word_count_openmp PRIVATE OpenMP::OpenMP_CXX)
