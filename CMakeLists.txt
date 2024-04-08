@@ -3,7 +3,7 @@ project(WordCountOpenMP)
 
 find_package(OpenMP REQUIRED)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11) 
 
 add_executable(word_count_openmp word_count_openmp.cpp)
 
